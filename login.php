@@ -1,16 +1,18 @@
 <?php
-
+    session_start();
     require "common.php";
     $username = $password = "";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(empty($_POST["username"])) {
             header("Location: login.php");
+            exit();
         } else {
             $username = sanitize($_POST["username"]);
         }
         if(empty($_POST["password"])) {
             header("Location: login.php");
+            exit();
         } else {
             $password = sanitize($_POST["password"]);
         }

@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require "config.php";
 
 function sanitize($data) {
@@ -13,4 +13,8 @@ function connect_db($servername, $db_username, $db_password, $database) {
         die("Connection failed: " . $conn->connect_error);
     }
     return $conn;
+}
+
+function addToCart($id) {
+    unset($_SESSION["products"][$id]);
 }

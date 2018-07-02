@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: row;
     background-color: bisque;
+    margin-left: 35%;
+    margin-top: 5%;
 }
 img {
     max-width: 150px;
@@ -19,4 +21,10 @@ img {
 #add_product {
     height: 4.8%;
     width: 100%;
+}
+#to_cart {
+    position: fixed;
+    width: 10%;
+    height: 5%;
+    margin-left: 5%;
 }
