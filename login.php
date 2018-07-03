@@ -20,7 +20,6 @@
             if($result["password"] == $password)
             { 
                 session_start();
-                fetch_products($conn);
                 header("Location: index.php");
                 exit();
             } else {
