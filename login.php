@@ -1,41 +1,32 @@
 <?php
-    session_start();
+    
     require "common.php";
     $username = $password = "";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
-        if(empty($_POST["username"])) {
-            header("Location: login.php");
-            exit();
-        } else {
+        if(!empty($_POST["username"]) && !empty($_POST["password"])) {
+
             $username = sanitize($_POST["username"]);
-        }
-        if(empty($_POST["password"])) {
-            header("Location: login.php");
-            exit();
-        } else {
             $password = sanitize($_POST["password"]);
-        }
 
-    
-    
-    $conn = connect_db($servername, $db_username, $db_password, $database);
+            $conn = connect_db($servername, $db_username, $db_password, $database);
 
-    $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
-    $stmt->bind_param('s',$username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $result = $result->fetch_assoc();
-    $stmt->close();
-    if($result["password"] == $password)
-    {
-        header("Location: index.php");
-    } else {
-        echo "Invalid credentials";
-    }
+            $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
+            $stmt->bind_param('s', $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $result = $result->fetch_assoc();
 
-
-        
+            if($result["password"] == $password)
+            { 
+                session_start();
+                fetch_products($conn);
+                header("Location: index.php");
+                exit();
+            } else {
+                echo "Invalid credentials";
+            }
+        } 
     }
 
     

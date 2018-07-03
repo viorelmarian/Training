@@ -1,47 +1,33 @@
 <?php
-session_start();
-require "common.php";
+require 'common.php';
 
-$conn = connect_db($servername, $db_username, $db_password, $database);
-
-    $stmt = $conn->prepare("SELECT * FROM products");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while($row = $result->fetch_assoc()) {
-        $products[] = $row;
-    }
-    $stmt->close();
-    $_SESSION["products"] = $products;
+if(isset($_REQUEST['id'])) {
+    $_SESSION['cart'][] = $_REQUEST['id'];
+}
 
 ?>
-
 <html>
     <head>
         <link rel="stylesheet" href="css/index.css">
-        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     </head>
     <body>
+        <a href="cart.php">
+            <button id="toCart"><?= translate('Go to cart') ?></button>
+        </a>
         
-        <button id="toCart">Go to cart</button>
-        <?php
-            foreach ($_SESSION["products"] as $product) {
-        ?>
+        <?php foreach (fetch_products() as $product) : ?>
 
-        <div class="product">
-            <img src="images/<?php echo $product["image"] ?>" alt="">
-            <div class="product_info">
-                <h1 id="product_title"><?php echo $product["title"] ?></h1>
-                <p id="product_description"><?php echo $product["description"] ?></p>
-                <p id="product_price">Price: <?php echo $product["price"] ?> $</p>
-                <button onclick="addToCart()">Add to cart</button>
+            <div class="product">
+                <img src="images/<?= $product["image"] ?>" alt="">
+                <div class="product_info">
+                    <h1 id="product_title"><?= $product["title"] ?></h1>
+                    <p id="product_description"><?= $product["description"] ?></p>
+                    <p id="product_price"><?= translate('Price') ?>: <?= $product["price"] ?> <?= translate('$') ?></p>
+                    <a href="index.php?id=<?= $product["id"] ?>"><?= translate('Add to cart') ?></a>
+                </div>
             </div>
-        </div>
         
-        <?php
-            }
-        ?>
-
-        <script src="js/index.js"></script>
+        <?php endforeach; ?>
     </body>
 
 </html>

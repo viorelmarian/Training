@@ -7,14 +7,27 @@ function sanitize($data) {
     return $data;
 }
 
-function connect_db($servername, $db_username, $db_password, $database) {
-    $conn = new mysqli($servername, $db_username, $db_password, $database);
+function connect_db() {
+    $conn = new mysqli(db_servername, db_username, db_password, db_database);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
     return $conn;
 }
 
-function addToCart($id) {
-    unset($_SESSION["products"][$id]);
+function fetch_products() {
+    $conn = connect_db();
+    $stmt = $conn->prepare("SELECT * FROM products");
+    $stmt->execute();
+    $result = $stmt->get_result();
+        while($row = $result->fetch_assoc()) {
+            $products[] = $row;
+        }
+    return $products;
+    
+}
+
+
+function translate($str) {
+    return $str;
 }

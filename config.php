@@ -1,6 +1,5 @@
 <?php 
-
-$servername = "localhost";
-$db_username = "root";
-$db_password = "mysql";
-$database = "training";
+define('db_servername', 'localhost');
+define('db_username', 'root');
+define('db_password', 'mysql');
+define('db_database', 'training');
