@@ -15,7 +15,7 @@ if(isset($_REQUEST['id'])) {
             <button id="toCart"><?= translate('Go to cart') ?></button>
         </a>
         
-        <?php foreach ((array)fetch_products() as $product) : ?>
+        <?php foreach (fetch_products(false) as $product) : ?>
 
             <div class="product">
                 <img src="images/<?= $product["image"] ?>" alt="">

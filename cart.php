@@ -1,17 +1,16 @@
 <?php 
-    require_once 'common.php';
-    if(isset($_REQUEST['remove'])) {
-        if($_REQUEST['remove'] == 'all') {
-            unset($_SESSION['cart']);
-            array_push($_SESSION['cart'],'0');
-            header("Location: cart.php");
-            exit();
-        } else {
-            unset($_SESSION['cart'][$_REQUEST['remove']]);
-            header("Location: cart.php");
-            exit();
+require_once 'common.php';
+
+if(isset($_REQUEST['id'])) {
+    if($_REQUEST['id'] == 'all') {
+        $_SESSION['cart'] = [];
+    } else {
+        $key = array_search($_REQUEST['id'], $_SESSION['cart']);
+        if ($key !== false) {
+            unset($_SESSION['cart'][$key]);
         }
     }
+}
 ?>
 <html>
     <head>
@@ -21,11 +20,11 @@
         <a href="index.php">
             <button><?= translate('Go to index') ?></button>
         </a>
-        <a href="cart.php?remove=all">
-            <button><?= translate('Remove all') ?></button>
+        <a href="cart.php?id=all">
+            <button><?= translate('remove all') ?></button>
         </a>
         
-        <?php foreach ((array)fetch_products_cart() as $product) : ?>
+        <?php foreach (fetch_products(true) as $product) : ?>
 
             <div class="product">
                 <img src="images/<?= $product["image"] ?>" alt="">
@@ -33,7 +32,7 @@
                     <h1 id="product_title"><?= $product["title"] ?></h1>
                     <p id="product_description"><?= $product["description"] ?></p>
                     <p id="product_price"><?= translate('Price: ') ?><?= $product["price"] ?> <?= translate('$') ?></p>
-                    <a href="cart.php?remove=<?= $product["id"] ?>"><?= translate('Remove') ?></a>
+                    <a href="cart.php?id=<?= $product["id"] ?>"><?= translate('remove') ?></a>
                 </div>
             </div>
         
