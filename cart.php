@@ -33,10 +33,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>' . translate('Price: ') . $product["price"] . translate('$') . '</p>
             <hr>';
         }
+        $message .=
+        '<p>' . $name . '</p>
+        <p>' . $contact . '</p>
+        <p>' . $comments . '</p>'
+        ;
         $message .= '</body></html>';
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         mail($to, $subject, $message, $headers);
+
+        $_SESSION['cart'] = [];
     }
 }
     
@@ -59,21 +66,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="product">
                 <img src="images/<?= $product["image"] ?>" alt="">
                 <div class="product_info">
-                    <h1 id="product_title"><?= $product["title"] ?></h1>
-                    <p id="product_description"><?= $product["description"] ?></p>
-                    <p id="product_price"><?= translate('Price: ') ?><?= $product["price"] ?> <?= translate('$') ?></p>
+                    <h1><?= $product["title"] ?></h1>
+                    <p><?= $product["description"] ?></p>
+                    <p><?= translate('Price: ') ?><?= $product["price"] ?> <?= translate('$') ?></p>
                     <a href="cart.php?id=<?= $product["id"] ?>"><?= translate('remove') ?></a>
                 </div>
             </div>
         
         <?php endforeach; ?>
 
-        <form action="cart.php" method="post" id="checkout_form">
+        <form action="cart.php" method="post">
             <fieldset>
-                <input type="text" name="name" id="name" placeholder="Name" autocomplete="off">
-                <input type="text" name="contact" id="contact" placeholder="Contact Information" autocomplete="off">
-                <textarea type="text" name="comments" id="comments" placeholder="Comments"></textarea>
-                <input type="submit" value="Checkout" id="checkout">
+                <input type="text" name="name" placeholder="<?= translate('Name') ?>" autocomplete="off">
+                <input type="text" name="contact" placeholder="<?= translate('Contact Information') ?>" autocomplete="off">
+                <textarea type="text" name="comments" placeholder="<?= translate('Comments') ?>"></textarea>
+                <input type="submit" value="<?= translate('Checkout') ?>">
             </fieldset>
         </form>
     </body>

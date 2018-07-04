@@ -12,7 +12,7 @@ if(isset($_REQUEST['id'])) {
     </head>
     <body>
         <a href="cart.php">
-            <button id="toCart"><?= translate('Go to cart') ?></button>
+            <button><?= translate('Go to cart') ?></button>
         </a>
         
         <?php foreach (fetch_products(false) as $product) : ?>
@@ -20,9 +20,9 @@ if(isset($_REQUEST['id'])) {
             <div class="product">
                 <img src="images/<?= $product["image"] ?>" alt="">
                 <div class="product_info">
-                    <h1 id="product_title"><?= $product["title"] ?></h1>
-                    <p id="product_description"><?= $product["description"] ?></p>
-                    <p id="product_price"><?= translate('Price: ') ?><?= $product["price"] ?> <?= translate('$') ?></p>
+                    <h1><?= $product["title"] ?></h1>
+                    <p><?= $product["description"] ?></p>
+                    <p><?= translate('Price: ') ?><?= $product["price"] ?> <?= translate('$') ?></p>
                     <a href="index.php?id=<?= $product["id"] ?>"><?= translate('Add to cart') ?></a>
                 </div>
             </div>

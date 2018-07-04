@@ -35,13 +35,13 @@ if (isset($_SESSION['login'])) {
         <link rel="stylesheet" href="css/product.css">
     </head>
     <body>
-        <form action="product.php" method="post" id="product">
+        <form action="product.php" method="post">
             <fieldset>
-                <input type="text" name="title" id="title" autocomplete="off" placeholder="Title">
-                <textarea name="description" id="description" placeholder="Description"></textarea>
-                <input type="text" name="price" id="price" autocomplete="off" placeholder="Price">
-                <input type="file" name="image" id="image">
-                <input type="submit" value="Save" id="save">
+                <input type="text" name="title"  autocomplete="off" placeholder="Title">
+                <textarea name="description"  placeholder="Description"></textarea>
+                <input type="text" name="price"  autocomplete="off" placeholder="Price">
+                <input type="file" name="image">
+                <input type="submit" value="Save">
             </fieldset>
         </form>
     </body>

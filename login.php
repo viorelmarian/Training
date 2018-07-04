@@ -8,20 +8,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username = sanitize($_POST['username']);
         $password = sanitize($_POST['password']);
 
-        $conn = connect_db($servername, $db_username, $db_password, $database);
-
-        $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
-        $stmt->bind_param('s', $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $result = $result->fetch_assoc();
-
-        if($result['password'] == $password)
-        { 
-            $_SESSION['login'] = "logged";
-            header("Location: index.php");
-            exit();
-        } elseif ($username == admin_username && $password == admin_password) {
+        if ($username == admin_username && $password == admin_password) {
             $_SESSION['login'] = "logged";
             header("Location: products.php");
             exit();
@@ -35,12 +22,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         <link rel="stylesheet" href="css/login.css">
     </head>
     <body>
-        <div id="login">
+        <div>
             <form action="login.php" method="post">
                 <fieldset>
-                    <input id="username" type="text" name="username" placeholder="Username" autocomplete="off">
-                    <input id="password" type="password" name="password" placeholder="Password" autocomplete="off">
-                    <input id="login" type="submit" value="Login">
+                    <input type="text" name="username" placeholder="<?= translate('Username') ?>" autocomplete="off">
+                    <input type="password" name="password" placeholder="<?= translate('Password') ?>" autocomplete="off">
+                    <input type="submit" value="<?= translate('Login') ?>">
                 </fieldset>
             </form>
         </div>
