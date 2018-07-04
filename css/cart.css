@@ -13,12 +13,12 @@
 input {
     margin: 10px;
 }
-#checkout{
+#checkout {
     margin-right: 10%;
     float: right;
     height: 5%;
 }
-textarea{
+textarea {
     min-width: 80%;
     min-height: 20%;
 }

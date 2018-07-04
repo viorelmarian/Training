@@ -1,35 +1,33 @@
 <?php
-    
-    require "common.php";
-    $username = $password = "";
+require 'common.php';
+$username = $password = "";
 
-    if($_SERVER["REQUEST_METHOD"] == "POST") {
-        if(!empty($_POST["username"]) && !empty($_POST["password"])) {
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if(!empty($_POST['username']) && !empty($_POST['password'])) {
 
-            $username = sanitize($_POST["username"]);
-            $password = sanitize($_POST["password"]);
+        $username = sanitize($_POST['username']);
+        $password = sanitize($_POST['password']);
 
-            $conn = connect_db($servername, $db_username, $db_password, $database);
+        $conn = connect_db($servername, $db_username, $db_password, $database);
 
-            $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
-            $stmt->bind_param('s', $username);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $result = $result->fetch_assoc();
+        $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $result = $result->fetch_assoc();
 
-            if($result["password"] == $password)
-            { 
-                session_start();
-                header("Location: index.php");
-                exit();
-            } else {
-                echo "Invalid credentials";
-            }
-        } 
-    }
-
-    
-    
+        if($result['password'] == $password)
+        { 
+            $_SESSION['login'] = "logged";
+            header("Location: index.php");
+            exit();
+        } elseif ($username == admin_username && $password == admin_password) {
+            $_SESSION['login'] = "logged";
+            header("Location: products.php");
+            exit();
+        }
+    } 
+}  
 ?>
 
 <html>
@@ -42,7 +40,7 @@
                 <fieldset>
                     <input id="username" type="text" name="username" placeholder="Username" autocomplete="off">
                     <input id="password" type="password" name="password" placeholder="Password" autocomplete="off">
-                    <input id="submit" type="submit" value="Login">
+                    <input id="login" type="submit" value="Login">
                 </fieldset>
             </form>
         </div>

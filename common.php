@@ -65,3 +65,24 @@ function fetch_products($cart = false) {
 function translate($str) {
     return $str;
 }
+
+function delete_product($id) {
+    $conn = connect_db();
+    $stmt = $conn->prepare("DELETE FROM products WHERE id=?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+}
+
+function edit_product($id, $title, $description, $price, $image) {
+    $conn = connect_db();
+    $stmt = $conn->prepare("UPDATE products SET title=?, description=?, price=?, image=? WHERE id=? ");
+    $stmt->bind_param('ssdsi', $title, $description, $price, $image, $id);
+    $stmt->execute();
+}
+
+function add_product($title, $description, $price, $image) {
+    $conn = connect_db();
+    $stmt = $conn->prepare("INSERT INTO `products`(`title`, `description`, `price`, `image`) VALUES (?,?,?,?)");
+    $stmt->bind_param('ssds', $title, $description, $price, $image);
+    $stmt->execute();
+}
