@@ -1,35 +1,32 @@
 <?php
 require_once 'common.php';
-if (isset($_SESSION['login'])) {
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if(!empty($_REQUEST['title']) && !empty($_REQUEST['description']) 
-        && !empty($_REQUEST['price']) && !empty($_REQUEST['image'])) {
-    
-            $title = $description = $price = $image ="";
-    
-            $title = sanitize($_REQUEST['title']);
-            $description = sanitize($_REQUEST['description']);
-            $price = sanitize($_REQUEST['price']);
-             $image = sanitize($_REQUEST['image']);
-    
-            if (isset($_SESSION['product_id'])) {
-                edit_product($_SESSION['product_id'], $title, $description, $price, $image);
-                header("Location: products.php");
-                exit();
-            } else {
-                add_product($title, $description, $price, $image);
-                header("Location: products.php");
-                exit();
-            }
-        } 
-    }
-} else {
+if (!isset($_SESSION['login'])) {
     header("Location: login.php");
     exit();
 }
 
-?>
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if(
+        !empty($_REQUEST['title']) && !empty($_REQUEST['description']) 
+        && !empty($_REQUEST['price']) && !empty($_REQUEST['image'])
+    ) {
 
+        $title = sanitize($_REQUEST['title']);
+        $description = sanitize($_REQUEST['description']);
+        $price = sanitize($_REQUEST['price']);
+
+        if (isset($_REQUEST['id'])) {
+            edit_product($_REQUEST['id'], $title, $description, $price, $image);
+            header("Location: products.php");
+            exit();
+        } else {
+            add_product($title, $description, $price, $image);
+            header("Location: products.php");
+            exit();
+        }
+    } 
+}
+?>
 <html>
     <head>
         <link rel="stylesheet" href="css/product.css">

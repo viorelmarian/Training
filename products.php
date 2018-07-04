@@ -17,7 +17,6 @@ if (isset($_REQUEST['delete'])) {
 }
 
 ?>
-
 <html>
     <head>
         <link rel="stylesheet" href="css/index.css">
