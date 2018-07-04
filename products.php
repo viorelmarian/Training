@@ -12,8 +12,8 @@ if (isset($_REQUEST['logout'])) {
     exit();
 }
 
-if (isset($_REQUEST['delete'])) {
-    delete_product($_REQUEST['delete']);
+if (isset($_REQUEST['id'])) {
+    delete_product($_REQUEST['id']);
 }
 
 ?>

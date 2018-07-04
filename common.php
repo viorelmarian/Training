@@ -68,6 +68,15 @@ function translate($str) {
 
 function delete_product($id) {
     $conn = connect_db();
+    
+    $stmt = $conn->prepare("SELECT * FROM products WHERE id=?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+    if ($row) {
+        unlink("images/" . $row['image']);
+    }
+
     $stmt = $conn->prepare("DELETE FROM products WHERE id=?");
     $stmt->bind_param('i', $id);
     $stmt->execute();
