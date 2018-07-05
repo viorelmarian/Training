@@ -5,52 +5,60 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
-$target_dir = "images/";
-$target_file = time().uniqid(rand()) . ".jpg";
-$uploadOk = 1;
+$product_info = [
+    'id' => '',
+    'title' => '',
+    'description' => '',
+    'price' => '',
+    'image' => ''
+];
 
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
     $product_info['title'] = sanitize($_REQUEST['title']);
     $product_info['description'] = sanitize($_REQUEST['description']);
     $product_info['price'] = sanitize($_REQUEST['price']);
-    $product_info['image'] = $_FILES["image"]["name"];
     
+    $target_dir = "images/";
+    $image_err = '';
+    $uploadOk = 0;
+
     if (empty($_FILES["image"]["tmp_name"])) {
-        $image_err = "Image is required";
+        if (!isset($_REQUEST['id']) || !$_REQUEST['id']) {
+            $image_err = translate("Image is required");
+        }
+    } elseif (!getimagesize($_FILES["image"]["tmp_name"])) {
+        $image_err= translate("Not an image.");
     } else {
-        $check = getimagesize($_FILES["image"]["tmp_name"]);
-    }
+        $product_info['image'] = time() . uniqid(rand()) . "." . pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+
+        if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_dir . $product_info['image'])) {
+            $product_info['image'] = '';
+        } else {
+            $uploadOk = 1;
+        }
+    }    
     
-    if($check !== false) {
-        $uploadOk = 1;
-    } else {
-        $uploadOk = 0;
-        $image_err= "Not an image.";
-    }
-
-    if ($uploadOk != 0) {
-        move_uploaded_file($_FILES["image"]["tmp_name"], $target_dir . $target_file);
-    }
-
+   
     if(
-        !empty($_REQUEST['title']) && !empty($_REQUEST['description']) 
-        && !empty($_REQUEST['price'] && $uploadOk != 0)
+        !$image_err
+        && !empty($_REQUEST['title'])
+        && !empty($_REQUEST['description']) 
+        && !empty($_REQUEST['price'])
     ) {
 
-        if (($_REQUEST['id']) != "") {
-            $old_image = get_product($_REQUEST['id'])['image'];
-            unlink("images/" . $old_image);
-            edit_product($_REQUEST['id'], $product_info['title'], $product_info['description'], $product_info['price'], $target_file);
-            header("Location: products.php");
-            exit();
-        } else {
-            add_product($product_info['title'], $product_info['description'], $product_info['price'], $target_file);
-            header("Location: products.php");
-            exit();
+        if (isset($_REQUEST['id']) && $_REQUEST['id']) {
+            $product_info['id'] = $_REQUEST['id'];
+            if ($uploadOk) {
+                unlink("images/" . get_product($_REQUEST['id'])['image']);
+            }
         }
-    } else {
+
+        save_product($product_info);
+
+        header("Location: products.php");
+        exit();
+} else {
         if (empty($_REQUEST['title'])) {
             $title_err = "Title is required";
         } 
@@ -61,13 +69,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $price_err = "Price is required";
         }
     }
-} else {
-    if (isset($_REQUEST['id'])) {
-        $product_info = get_product($_REQUEST['id']);
-    } else {
-        $product_info = [];
-    }
-    
+} else if (isset($_REQUEST['id'])) {
+    $product_info = get_product($_REQUEST['id']);
 }
 ?>
 <html>
@@ -75,7 +78,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         <link rel="stylesheet" href="css/product.css">
     </head>
     <body>
-        <form action="product.php?id=<?= $_REQUEST['id'] ?>" method="post" enctype="multipart/form-data">
+        <form action="product.php<?= isset($_REQUEST['id']) ? '?id=' . $_REQUEST['id'] : '' ?>" method="post" enctype="multipart/form-data">
             <fieldset>
                 <input type="text" name="title"  autocomplete="off" placeholder="Title" value="<?= $product_info['title'] ?>">
                 <p style="color:red"><?= $title_err ?></p>
@@ -88,7 +91,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <p style="color:red"><?= $image_err ?></p>
                 <br>
                 <div class="preview" >
-                    <img style="width:100px;height:100px;" src="http://shopping.com/images/<?=$product_info['image']?>" alt="">
+                    <?php if ($product_info['image']) : ?>
+                        <img style="width:100px;height:100px;" src="http://shopping.com/images/<?=$product_info['image']?>" alt="">
+                    <?php endif; ?>
                 </div>
                 <input type="submit" value="Save">
             </fieldset>

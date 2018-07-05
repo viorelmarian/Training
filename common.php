@@ -82,17 +82,17 @@ function delete_product($id) {
     $stmt->execute();
 }
 
-function edit_product($id, $title, $description, $price, $image) {
+function save_product($product_info) {
     $conn = connect_db();
-    $stmt = $conn->prepare("UPDATE products SET title=?, description=?, price=?, image=? WHERE id=? ");
-    $stmt->bind_param('ssdsi', $title, $description, $price, $image, $id);
-    $stmt->execute();
-}
 
-function add_product($title, $description, $price, $image) {
-    $conn = connect_db();
-    $stmt = $conn->prepare("INSERT INTO `products`(`title`, `description`, `price`, `image`) VALUES (?,?,?,?)");
-    $stmt->bind_param('ssds', $title, $description, $price, $image);
+    if (isset($product_info['id']) && $product_info['id']) {
+        $stmt = $conn->prepare("UPDATE products SET title=?, description=?, price=?, image=? WHERE id=? ");
+        $stmt->bind_param('ssdsi', $product_info['title'], $product_info['description'], $product_info['price'], $product_info['image'], $product_info['id']);
+    } else {
+        $stmt = $conn->prepare("INSERT INTO `products`(`title`, `description`, `price`, `image`) VALUES (?,?,?,?)");
+        $stmt->bind_param('ssds', $product_info['title'], $product_info['description'], $product_info['price'], $product_info['image']);
+    }
+    
     $stmt->execute();
 }
 
