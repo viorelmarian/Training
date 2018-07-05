@@ -95,3 +95,11 @@ function add_product($title, $description, $price, $image) {
     $stmt->bind_param('ssds', $title, $description, $price, $image);
     $stmt->execute();
 }
+
+function get_product($id) {
+    $conn = connect_db();
+    $stmt = $conn->prepare("SELECT * FROM products WHERE id=?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}

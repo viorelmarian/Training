@@ -5,7 +5,6 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
-
 if (isset($_REQUEST['logout'])) {
     unset($_SESSION['login']);
     header("Location: login.php");
