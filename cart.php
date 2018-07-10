@@ -13,11 +13,10 @@ if (isset($_REQUEST['id'])) {
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = sanitize($_REQUEST['name']);
+    $contact = sanitize($_REQUEST['contact']);
+    $comments = sanitize($_REQUEST['comments']);
     if(!empty($_POST['name']) && !empty($_POST['contact']) && !empty($_POST['comments'])) {
-
-        $name = sanitize($_REQUEST['name']);
-        $contact = sanitize($_REQUEST['contact']);
-        $comments = sanitize($_REQUEST['comments']);
 
         $to = manager_email;
 
@@ -44,6 +43,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         mail($to, $subject, $message, $headers);
 
         $_SESSION['cart'] = [];
+        $name = $contact = $comments = '';
+    } else {
+        if(empty($name)) {
+            $name_err = "Name is required.";
+        } 
+        if(empty($contact)) {
+            $contact_err = "Contact Information is required.";
+        } 
+        if(empty($comments)) {
+            $comments_err = "Add a comment.";
+        }         
     }
 }
     
@@ -58,7 +68,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button><?= translate('Go to index') ?></button>
         </a>
         <a href="cart.php?id=all">
-            <button><?= translate('remove all') ?></button>
+            <button><?= translate('Remove all') ?></button>
         </a>
         
         <?php foreach (fetch_products(true) as $product) : ?>
@@ -69,7 +79,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <h1><?= $product["title"] ?></h1>
                     <p><?= $product["description"] ?></p>
                     <p><?= translate('Price: ') ?><?= $product["price"] ?> <?= translate('$') ?></p>
-                    <a href="cart.php?id=<?= $product["id"] ?>"><?= translate('remove') ?></a>
+                    <a href="cart.php?id=<?= $product["id"] ?>"><?= translate('Remove') ?></a>
                 </div>
             </div>
         
@@ -77,9 +87,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <form action="cart.php" method="post">
             <fieldset>
-                <input type="text" name="name" placeholder="<?= translate('Name') ?>" autocomplete="off">
-                <input type="text" name="contact" placeholder="<?= translate('Contact Information') ?>" autocomplete="off">
-                <textarea type="text" name="comments" placeholder="<?= translate('Comments') ?>"></textarea>
+                <input type="text" name="name" placeholder="<?= translate('Name') ?>" autocomplete="off" value="<?= $name ?>">
+                <p style="color:red"><?= $name_err ?></p>
+                <input type="text" name="contact" placeholder="<?= translate('Contact Information') ?>" autocomplete="off" value="<?= $contact ?>">
+                <p style="color:red"><?= $contact_err ?></p>
+                <input type="text" name="comments" placeholder="<?= translate('Comments') ?>" value="<?= $comments ?>">
+                <p style="color:red"><?= $comments_err ?></p>
                 <input type="submit" value="<?= translate('Checkout') ?>">
             </fieldset>
         </form>

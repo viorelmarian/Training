@@ -18,7 +18,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $product_info['title'] = sanitize($_REQUEST['title']);
     $product_info['description'] = sanitize($_REQUEST['description']);
     $product_info['price'] = sanitize($_REQUEST['price']);
-    
+    $product_info['image'] = get_product($_REQUEST['id'])['image'];
+
     $target_dir = "images/";
     $image_err = '';
     $uploadOk = 0;
@@ -69,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $price_err = "Price is required";
         }
     }
-} else if (isset($_REQUEST['id'])) {
+} elseif (isset($_REQUEST['id'])) {
     $product_info = get_product($_REQUEST['id']);
 }
 ?>
